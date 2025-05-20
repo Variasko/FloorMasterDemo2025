@@ -1,8 +1,11 @@
 ﻿using FloorMaster.DataBase;
+using FloorMaster.Views.Windows;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace FloorMaster.Helpers
 {
@@ -10,123 +13,169 @@ namespace FloorMaster.Helpers
     {
         private readonly FloorMasterEntities _db = new FloorMasterEntities().GetContext();
         private readonly List<Partner> _partners;
-        //private readonly List<Company> _companys;
-        //private readonly List<ContactInfo> _contactInfos;
         private readonly List<Sale> _sales;
 
         public PartnerCardGenerator()
         {
             _partners = _db.Partner.ToList();
-            //_companys = _db.Company.ToList();
-            //_contactInfos = _db.ContactInfo.ToList();
             _sales = _db.Sale.ToList();
         }
 
-        private int CalculateDescount(Partner partner)
+        private int CalculateDiscount(Partner partner)
         {
-            var salesOfpartner = _sales.Where(s => s.PartnerId == partner.Id).ToList();
-            decimal sum = 0;
-            foreach (var sale in salesOfpartner)
-            {
-                sum += (decimal)sale.Amount;
-            }
+            var totalSales = _sales
+                .Where(s => s.PartnerId == partner.Id)
+                .Sum(s => (decimal)s.Amount);
 
-            if (sum > 10000 && sum < 50000)
+            if (totalSales > 10000 && totalSales < 50000)
                 return 5;
 
-            if (sum >= 50000 && sum < 300000)
+            if (totalSales >= 50000 && totalSales < 300000)
                 return 10;
 
-            if (sum >= 300000)
+            if (totalSales >= 300000)
                 return 15;
+
             return 0;
         }
+
         public StackPanel GetCards()
         {
-            var cards = new StackPanel();
+            var stackPanel = new StackPanel { Name = "CardsStack" };
 
-            foreach (var p in _partners)
+            foreach (var partner in _partners)
             {
-                Border card = GenerateCard(p);
-                cards.Children.Add(card);
+                stackPanel.Children.Add(GenerateCard(partner));
             }
 
-            return cards;
+            return stackPanel;
         }
-        public Border GenerateCard(Partner p)
+
+        private Border GenerateCard(Partner partner)
         {
-            string type = p.PartnerType.Name;
-            string companyName = p.Company.Name;
-            int discount = CalculateDescount(p);
-            string director = $"{p.Company.DirectorSurname} " +
-                              $"{p.Company.DirectorName} " +
-                              $"{p.Company.DirectorPatronymic}";
-            string contactPhone = "1";
-            decimal rating = p.Rating;
+            var mainStack = new StackPanel();
+
+            // Header Section
+            var headerGrid = new Grid();
+            var leftHeader = CreateHeaderLeft(partner);
+            var rightHeader = CreateHeaderRight(partner);
+            headerGrid.Children.Add(leftHeader);
+            headerGrid.Children.Add(rightHeader);
+
+            // Content Section
+            var directorBlock = CreateDirectorBlock(partner.Company);
+            var phoneBlock = new TextBlock { Text = "1" }; // Заглушка
+            var ratingBlock = CreateRatingBlock(partner.Rating);
+
+            mainStack.Children.Add(headerGrid);
+            mainStack.Children.Add(directorBlock);
+            mainStack.Children.Add(phoneBlock);
+            mainStack.Children.Add(ratingBlock);
 
             Border card = new Border
             {
                 Margin = new Thickness(100, 20, 100, 20),
-                Padding = new Thickness(10)
+                Padding = new Thickness(10),
+                Name = "CardItem",
+                Child = mainStack,
+                Style = (Style)Application.Current.FindResource("CardItem")
             };
-            StackPanel mainCardStack = new StackPanel();
-            Grid hat = new Grid();
-            StackPanel hatStack = new StackPanel
+
+            AddCardClickHandler(card, partner); // Добавляем обработчик клика
+
+            // Эффекты при наведении (опционально)
+            card.MouseEnter += (s, e) => card.Background = Brushes.LightGray;
+            card.MouseLeave += (s, e) => card.Background = (Brush)new BrushConverter().ConvertFrom("#f4e8d3");
+
+            return card;
+        }
+
+        private StackPanel CreateHeaderLeft(Partner partner)
+        {
+            var stack = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
 
-            TextBlock pTypeTB = new TextBlock
+            stack.Children.Add(new TextBlock
             {
-                Text = type
-            };
-            TextBlock slash = new TextBlock
-            {
-                Text = " | "
-            };
-            TextBlock cName = new TextBlock
-            {
-                Text = companyName
-            };
-            hatStack.Children.Add(pTypeTB);
-            hatStack.Children.Add(slash);
-            hatStack.Children.Add(cName);
+                Text = partner.PartnerType.Name,
+                Name = "PartnerTypeTB"
+            });
 
-            StackPanel discStack = new StackPanel
+            stack.Children.Add(new TextBlock { Text = " | " });
+
+            stack.Children.Add(new TextBlock
+            {
+                Text = partner.Company.Name,
+                Name = "CompanyNameTB"
+            });
+
+            return stack;
+        }
+
+        private StackPanel CreateHeaderRight(Partner partner)
+        {
+            var stack = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            TextBlock discountTB = new TextBlock
-            {
-                Text = $"{discount}%"
-            };
-            discStack.Children.Add(discountTB);
 
-            hat.Children.Add(hatStack);
-            hat.Children.Add(discStack);
-
-            mainCardStack.Children.Add(hat);
-
-            TextBlock directorTB = new TextBlock
+            stack.Children.Add(new TextBlock
             {
-                Text = director
-            };
-            TextBlock contactTB = new TextBlock
-            {
-                Text = contactPhone
-            };
-            TextBlock ratingTB = new TextBlock
-            {
-                Text = $"{rating}"
-            };
-            mainCardStack.Children.Add(directorTB);
-            mainCardStack.Children.Add(contactTB);
-            mainCardStack.Children.Add(ratingTB);
+                Text = $"{CalculateDiscount(partner)}%"
+            });
 
-            card.Child = mainCardStack;
-            return card;
+            return stack;
+        }
+
+        private TextBlock CreateDirectorBlock(Company company)
+        {
+            return new TextBlock
+            {
+                Name = "DirectorTB",
+                Text = $"{company.DirectorSurname} " +
+                       $"{company.DirectorName} " +
+                       $"{company.DirectorPatronymic}"
+            };
+        }
+
+        private TextBlock CreateRatingBlock(decimal rating)
+        {
+            return new TextBlock
+            {
+                Name = "RatingTB",
+                Text = rating.ToString()
+            };
+        }
+        // В класс PartnerCardGenerator добавляем:
+        private void AddCardClickHandler(Border card, Partner partner)
+        {
+            card.MouseDown += (sender, e) =>
+            {
+                OpenPartnerEditorWindow(partner);
+            };
+        }
+
+        public void OpenPartnerEditorWindow(Partner partner = null)
+        {
+            var editWindow = new PartnerAddEditWindow(partner);
+
+            // Обновляем данные после закрытия окна
+            editWindow.Closed += (s, e) =>
+            {
+                RefreshPartnerData();
+            };
+
+            editWindow.ShowDialog();
+        }
+
+        private void RefreshPartnerData()
+        {
+            _partners.Clear();
+            _partners.AddRange(_db.Partner.ToList());
         }
     }
 }

@@ -25,7 +25,8 @@ namespace FloorMaster.Views.Windows
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-
+            new PartnerAddEditWindow().ShowDialog();
+            PartnerScroll.Content = _pcg.GetCards();
         }
     }
 }

@@ -16,7 +16,7 @@
             <Setter Property="BorderThickness" Value="3"/>
         </Style>
 
-        <Style TargetType="{x:Type Border}">
+        <Style TargetType="{x:Type Border}" x:Key="CardItem">
             <Setter Property="Background" Value="#f4e8d3"/>
             <Setter Property="BorderBrush" Value="#d4c9b6"/>
             <Setter Property="BorderThickness" Value="2"/>

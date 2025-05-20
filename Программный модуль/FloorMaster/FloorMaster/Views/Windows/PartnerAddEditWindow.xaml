@@ -1,0 +1,101 @@
+﻿<Window x:Class="FloorMaster.Views.Windows.PartnerAddEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Информация о партнёре" 
+        Height="450" 
+        Width="800"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="0 5 0 2"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="0 0 0 10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="0 0 0 10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+    </Window.Resources>
+    <ScrollViewer>
+        <StackPanel>
+            <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Левая колонка -->
+                    <StackPanel Grid.Column="0" Margin="0 0 20 0">
+                        <GroupBox Header="Основная информация">
+                            <StackPanel>
+                                <TextBlock Text="Название компании"/>
+                                <TextBox Name="CompanyNameTextBox" MaxLength="150"/>
+
+                                <TextBlock Text="Юридический адрес"/>
+                                <TextBox Name="Address" MaxLength="200"/>
+
+                                <TextBlock Text="ИНН компании"/>
+                                <TextBox Name="INN" MaxLength="10"/>
+
+                                <TextBlock Text="Тип компании"/>
+                                <ComboBox Name="PartnerType"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+
+                    <!-- Правая колонка -->
+                    <StackPanel Grid.Column="1">
+                        <GroupBox Header="Руководство">
+                            <StackPanel>
+                                <TextBlock Text="Фамилия директора"/>
+                                <TextBox Name="DirSur" MaxLength="50"/>
+
+                                <TextBlock Text="Имя директора"/>
+                                <TextBox Name="DirName" MaxLength="50"/>
+
+                                <TextBlock Text="Отчество директора"/>
+                                <TextBox Name="DirPat" MaxLength="50"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Header="Контакты" Margin="0 10 0 0">
+                            <StackPanel>
+                                <TextBlock Text="Телефон"/>
+                                <TextBox Name="Phone" MaxLength="12"/>
+
+                                <TextBlock Text="Электронная почта"/>
+                                <TextBox Name="Email" MaxLength="150"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Header="Дополнительно" Margin="0 10 0 0">
+                            <StackPanel>
+                                <TextBlock Text="Рейтинг"/>
+                                <TextBox Name="Rating" MaxLength="4"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Кнопка сохранения -->
+    <Button x:Name="SaveButton"
+            Content="Сохранить"
+            Width="200"
+            Height="40"
+            FontSize="16"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="20"/>
+    </StackPanel>
+    </ScrollViewer>
+</Window>
