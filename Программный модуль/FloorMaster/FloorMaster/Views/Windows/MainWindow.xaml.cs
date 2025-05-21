@@ -19,7 +19,7 @@ namespace FloorMaster.Views.Windows
 
         private void SalesButton_Click(object sender, RoutedEventArgs e)
         {
-
+            new SalesWindow().Show();Close();
         }
     }
 }

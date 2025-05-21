@@ -183,6 +183,9 @@
     <Compile Include="Views\Windows\PartnerWindow.xaml.cs">
       <DependentUpon>PartnerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Windows\SalesWindow.xaml.cs">
+      <DependentUpon>SalesWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -236,6 +239,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\PartnerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\SalesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

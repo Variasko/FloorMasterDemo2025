@@ -25,3 +25,5 @@ C:\Users\caxac\OneDrive\Рабочий стол\Все папки\Разрабо
 C:\Users\caxac\OneDrive\Рабочий стол\Все папки\Разработка не на Python\c#\Дем\Программный модуль\FloorMaster\FloorMaster\obj\Debug\FloorMaster_Content.g.cs
 C:\Users\caxac\OneDrive\Рабочий стол\Все папки\Разработка не на Python\c#\Дем\Программный модуль\FloorMaster\FloorMaster\obj\Debug\Views\Windows\PartnerAddEditWindow.g.cs
 C:\Users\caxac\OneDrive\Рабочий стол\Все папки\Разработка не на Python\c#\Дем\Программный модуль\FloorMaster\FloorMaster\obj\Debug\Views\Windows\PartnerAddEditWindow.baml
+C:\Users\caxac\OneDrive\Рабочий стол\Все папки\Разработка не на Python\c#\Дем\Программный модуль\FloorMaster\FloorMaster\obj\Debug\Views\Windows\SalesWindow.g.cs
+C:\Users\caxac\OneDrive\Рабочий стол\Все папки\Разработка не на Python\c#\Дем\Программный модуль\FloorMaster\FloorMaster\obj\Debug\Views\Windows\SalesWindow.baml

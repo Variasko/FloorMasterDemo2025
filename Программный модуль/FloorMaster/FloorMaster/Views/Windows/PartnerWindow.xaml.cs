@@ -10,7 +10,6 @@ namespace FloorMaster.Views.Windows
     /// </summary>
     public partial class PartnerWindow : Window
     {
-        private readonly FloorMasterEntities _db = new FloorMasterEntities().GetContext();
         private PartnerCardGenerator _pcg = new PartnerCardGenerator();
         public PartnerWindow()
         {

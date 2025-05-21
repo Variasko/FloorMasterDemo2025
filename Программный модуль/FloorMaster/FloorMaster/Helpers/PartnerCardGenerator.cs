@@ -1,6 +1,7 @@
 ﻿using FloorMaster.DataBase;
 using FloorMaster.Views.Windows;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +12,7 @@ namespace FloorMaster.Helpers
 {
     internal class PartnerCardGenerator
     {
-        private readonly FloorMasterEntities _db = new FloorMasterEntities().GetContext();
+        private FloorMasterEntities _db = new FloorMasterEntities().GetContext();
         private readonly List<Partner> _partners;
         private readonly List<Sale> _sales;
 
@@ -37,6 +38,22 @@ namespace FloorMaster.Helpers
                 return 15;
 
             return 0;
+        }
+
+        private void Partners_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            GetCards(); // Автоматическое обновление при изменении коллекции
+        }
+
+        public void RefreshData()
+        {
+            _db = new FloorMasterEntities().GetContext();
+            var freshData = _db.Partner.Include("Company").ToList();
+            _partners.Clear();
+            foreach (var item in freshData)
+            {
+                _partners.Add(item);
+            }
         }
 
         public StackPanel GetCards()
